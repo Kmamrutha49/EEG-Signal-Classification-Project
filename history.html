@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction History – CryoMind</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .navbar button {
+            background: white;
+            color: #185a9d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: #185a9d;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .empty {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <h1>Prediction History 🧠</h1>
+    <div>
+        <a href="/eeg/predict/">Back to Prediction</a>
+        <form action="/logout/" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+
+{% if history %}
+    <table>
+        <tr>
+            <th>Date & Time</th>
+            <th>EEG Input</th>
+            <th>Prediction</th>
+            <th>Command</th>
+        </tr>
+        {% for h in history %}
+        <tr>
+            <td>{{ h.created_at }}</td>
+            <td>{{ h.eeg_input|truncatechars:50 }}</td>
+            <td>{{ h.predicted_label }}</td>
+            <td>{{ h.command }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <div class="empty">No predictions yet.</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>

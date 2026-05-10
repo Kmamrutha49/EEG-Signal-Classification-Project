@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User EEG Prediction – CryoMind</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .navbar button {
+            background: white;
+            color: #0077b6;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        button.predict-btn {
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: #4facfe;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button.predict-btn:hover {
+            background: #3586e8;
+        }
+
+        .result {
+            background: #e3fcef;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .history-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .history-link a {
+            text-decoration: none;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .history-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>CryoMind – EEG Prediction 🧠</h1>
+        <form action="/logout/" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+
+        <!-- Input -->
+        <div class="card">
+            <h2>Enter EEG Signal</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <label>EEG Signal Values</label>
+                <textarea name="signal" rows="6" placeholder="Example: 0.12,0.15,0.18,0.22,0.25"></textarea>
+
+                <button type="submit" class="predict-btn">Predict</button>
+            </form>
+        </div>
+
+        {% if predicted_label %}
+        <!-- Result -->
+        <div class="card result">
+            <h3>Prediction Result</h3>
+            <p><b>Predicted Mental State:</b> {{ predicted_label }}</p>
+            <p><b>Action:</b> {{ command }}</p>
+        </div>
+        {% endif %}
+
+        {% if plot_image %}
+        <div class="card">
+            <h3>EEG Signal Graph</h3>
+            <img src="/media/{{ plot_image }}" width="700">
+        </div>
+        {% endif %}
+
+
+        {% if prob_graph %}
+        <div class="card">
+            <h3>Prediction Probability</h3>
+            <img src="/media/{{ prob_graph }}" width="500">
+        </div>
+        {% endif %}
+
+
+        <!-- History -->
+        <div class="history-link">
+            <a href="/eeg/history/">View Prediction History</a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
